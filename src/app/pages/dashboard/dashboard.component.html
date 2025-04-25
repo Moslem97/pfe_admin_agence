@@ -1,0 +1,113 @@
+<aside class="sidebar">
+    <h3>Admin Panel</h3>
+    <ul>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Users</a></li>
+      <!-- Add more as needed -->
+    </ul>
+  </aside>
+  
+  <main class="container">
+    <h2>Admin Dashboard - Manage Services</h2>
+  
+    <!-- Service Form -->
+    <form (ngSubmit)="onSubmit()" novalidate>
+      <div class="form-group">
+        <label for="name">Service Name:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          [(ngModel)]="selectedService.name"
+          class="form-control"
+          required
+          aria-required="true"
+        />
+      </div>
+  
+      <div class="form-group">
+        <label for="description">Description:</label>
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)]="selectedService.description"
+          class="form-control"
+          rows="3"
+          required
+          aria-required="true"
+        ></textarea>
+      </div>
+  
+      <div class="form-group button-group">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [attr.aria-label]="isEditing ? 'Update service' : 'Add service'"
+        >
+          {{ isEditing ? 'Update Service' : 'Add Service' }}
+        </button>
+        <button
+          *ngIf="isEditing"
+          type="button"
+          class="btn btn-secondary"
+          (click)="resetForm()"
+          aria-label="Cancel editing"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  
+    <!-- Feedback Message -->
+    <p
+      *ngIf="errorMessage"
+      [ngClass]="{
+        success: errorMessage.includes('successfully'),
+        error: !errorMessage.includes('successfully')
+      }"
+      role="alert"
+    >
+      {{ errorMessage }}
+    </p>
+  
+    <!-- Services Table -->
+    <div class="table-wrapper" *ngIf="services.length">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let service of services">
+            <td>{{ service.id }}</td>
+            <td>{{ service.name }}</td>
+            <td>{{ service.description }}</td>
+            <td>
+              <button
+                class="btn btn-edit"
+                (click)="editService(service)"
+                [attr.aria-label]="'Edit ' + service.name"
+              >
+                Edit
+              </button>
+              <button
+                class="btn btn-delete"
+                (click)="deleteService(service.id)"
+                [attr.aria-label]="'Delete ' + service.name"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <p *ngIf="!services.length && !errorMessage">No services available.</p>
+  </main>
+  

@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>Document Review</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Appointment ID</th>
+        <th>Document Name</th>
+        <th>File Type</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doc of documents">
+        <td>{{ doc.appointmentId }}</td>
+        <td>{{ doc.name }}</td>
+        <td>{{ doc.fileName }}</td>
+        <td>{{ doc.status }}</td>
+        <td>
+          <button (click)="downloadDocument(doc.id, doc.name)">Download</button>
+          <select #statusSelect (change)="updateStatus(doc.id, statusSelect.value)">
+            <option value="" [selected]="true">Change Status</option>
+            <option value="VALID">Valid</option>
+            <option value="INVALID">Invalid</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

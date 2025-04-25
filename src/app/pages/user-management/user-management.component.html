@@ -1,0 +1,148 @@
+```html
+<aside class="sidebar">
+  <h3>Admin Panel</h3>
+  <ul>
+    <li><a href="#">Dashboard</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#">Users</a></li>
+  </ul>
+</aside>
+
+<div class="main-content">
+  <!-- Toggle Form Button -->
+  <button class="btn btn-primary" (click)="toggleForm()" *ngIf="!showForm">
+    Add New User
+  </button>
+
+  <!-- Form Modal -->
+  <div class="form-modal" *ngIf="showForm">
+    <div class="form-content">
+      <h3>{{ isEditing ? 'Edit User' : 'Add User' }}</h3>
+      <form (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            [(ngModel)]="selectedUser.firstName"
+            name="firstName"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            [(ngModel)]="selectedUser.lastName"
+            name="lastName"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            [(ngModel)]="selectedUser.email"
+            name="email"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone:</label>
+          <input
+            type="text"
+            id="phone"
+            [(ngModel)]="selectedUser.phone"
+            name="phone"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="cin">CIN:</label>
+          <input
+            type="text"
+            id="cin"
+            [(ngModel)]="selectedUser.cin"
+            name="cin"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="rib">RIB:</label>
+          <input
+            type="text"
+            id="rib"
+            [(ngModel)]="selectedUser.rib"
+            name="rib"
+            class="form-control"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            [(ngModel)]="selectedUser.password"
+            name="password"
+            class="form-control"
+            [required]="!isEditing"
+            [placeholder]="isEditing ? 'Leave blank to keep unchanged' : 'Enter password'"
+          />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            {{ isEditing ? 'Update User' : 'Add User' }}
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="toggleForm()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Error/Success Message -->
+  <p *ngIf="errorMessage" [ngClass]="{'success': errorMessage.includes('successfully'), 'error': !errorMessage.includes('successfully')}">
+    {{ errorMessage }}
+  </p>
+
+  <!-- Users Table -->
+  <table class="table" *ngIf="users.length">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>CIN</th>
+        <th>RIB</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td data-label="ID">{{ user.id }}</td>
+        <td data-label="First Name">{{ user.firstName }}</td>
+        <td data-label="Last Name">{{ user.lastName }}</td>
+        <td data-label="Email">{{ user.email }}</td>
+        <td data-label="Phone">{{ user.phone }}</td>
+        <td data-label="CIN">{{ user.cin }}</td>
+        <td data-label="RIB">{{ user.rib }}</td>
+        <td data-label="Actions">
+          <button class="btn btn-edit" (click)="editUser(user)">Edit</button>
+          <button class="btn btn-delete" (click)="deleteUser(user.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!users.length && !errorMessage">No users available.</p>
+</div>
