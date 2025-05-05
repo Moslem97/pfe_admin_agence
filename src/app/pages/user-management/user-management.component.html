@@ -1,148 +1,347 @@
-```html
-<aside class="sidebar">
-  <h3>Admin Panel</h3>
-  <ul>
-    <li><a href="#">Dashboard</a></li>
-    <li><a href="#">Services</a></li>
-    <li><a href="#">Users</a></li>
-  </ul>
-</aside>
-
-<div class="main-content">
-  <!-- Toggle Form Button -->
-  <button class="btn btn-primary" (click)="toggleForm()" *ngIf="!showForm">
-    Add New User
-  </button>
-
-  <!-- Form Modal -->
-  <div class="form-modal" *ngIf="showForm">
-    <div class="form-content">
-      <h3>{{ isEditing ? 'Edit User' : 'Add User' }}</h3>
-      <form (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="firstName">First Name:</label>
-          <input
-            type="text"
-            id="firstName"
-            [(ngModel)]="selectedUser.firstName"
-            name="firstName"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name:</label>
-          <input
-            type="text"
-            id="lastName"
-            [(ngModel)]="selectedUser.lastName"
-            name="lastName"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            [(ngModel)]="selectedUser.email"
-            name="email"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="phone">Phone:</label>
-          <input
-            type="text"
-            id="phone"
-            [(ngModel)]="selectedUser.phone"
-            name="phone"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="cin">CIN:</label>
-          <input
-            type="text"
-            id="cin"
-            [(ngModel)]="selectedUser.cin"
-            name="cin"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="rib">RIB:</label>
-          <input
-            type="text"
-            id="rib"
-            [(ngModel)]="selectedUser.rib"
-            name="rib"
-            class="form-control"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            [(ngModel)]="selectedUser.password"
-            name="password"
-            class="form-control"
-            [required]="!isEditing"
-            [placeholder]="isEditing ? 'Leave blank to keep unchanged' : 'Enter password'"
-          />
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="btn btn-primary">
-            {{ isEditing ? 'Update User' : 'Add User' }}
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="toggleForm()">
-            Cancel
-          </button>
-        </div>
-      </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    body {
+      background-image: url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrxCZS8RUx52KhkLFeYR19uXX3GnbF9-sH75brySGs70DJ1EINGwkFnr6K5LqopCqGHTVK79x_gscCHE_cR1wmpIADhJXkTZIJhDz_VtYuxwekNibQUVl6VKNuq3uOlTsfnFW2F_ZVXsm2m7DU2IGJREbwsM16cR45D3-4iI5AwRArtjCnR713SvfIJpg/s1934/stb%20%20thebanker.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-color: #f8f9fa;
+      position: relative;
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    .navbar {
+      background-color: rgba(0, 51, 102, 0.9);
+      position: relative;
+      z-index: 2;
+    }
+    .stb-logo {
+      width: 140px;
+      height: 50px;
+    }
+    .content {
+      padding: 0.5rem 0;
+      position: relative;
+      z-index: 2;
+    }
+    .toc {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background-color: rgba(26, 31, 54, 0.8);
+      color: #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      z-index: 1000;
+    }
+    .toc h3 {
+      color: #fff;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+    .toc ul {
+      list-style: none;
+      padding: 0;
+    }
+    .toc ul li {
+      margin-bottom: 0.5rem;
+    }
+    .toc ul li a {
+      color: #ddd;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+    .toc ul li a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    .main-content {
+      padding: 1rem;
+    }
+    .table {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .table th {
+      background-color: #1a1f36;
+      color: #ddd;
+    }
+    .table td {
+      vertical-align: middle;
+    }
+    .btn-action {
+      margin: 0 5px;
+    }
+    .form-modal {
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+    .form-content h3 {
+      color: #1a1f36;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    .success, .error {
+      text-align: center;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .no-data {
+      text-align: center;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .btn-edit {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+    .btn-delete {
+      background-color: #dc3545;
+      border-color: #dc3545;
+      color: #fff;
+    }
+    .footer {
+      background-color: #1a1f36;
+      color: #ddd;
+      position: relative;
+      z-index: 2;
+    }
+    .footer a {
+      color: #ddd;
+    }
+    .footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+    @media (max-width: 767px) {
+      .table {
+        display: block;
+        overflow-x: auto;
+      }
+      .table th, .table td {
+        min-width: 120px;
+      }
+      .toc {
+        position: static;
+        margin: 1rem auto;
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" >
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/06/Logo_STB.png" alt="STB Bank Logo" class="stb-logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/services">Services Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/documents">Documents Management</a>
+          </li>
+        </ul>
+      </div>
     </div>
-  </div>
+  </nav>
 
-  <!-- Error/Success Message -->
-  <p *ngIf="errorMessage" [ngClass]="{'success': errorMessage.includes('successfully'), 'error': !errorMessage.includes('successfully')}">
-    {{ errorMessage }}
-  </p>
 
-  <!-- Users Table -->
-  <table class="table" *ngIf="users.length">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>CIN</th>
-        <th>RIB</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td data-label="ID">{{ user.id }}</td>
-        <td data-label="First Name">{{ user.firstName }}</td>
-        <td data-label="Last Name">{{ user.lastName }}</td>
-        <td data-label="Email">{{ user.email }}</td>
-        <td data-label="Phone">{{ user.phone }}</td>
-        <td data-label="CIN">{{ user.cin }}</td>
-        <td data-label="RIB">{{ user.rib }}</td>
-        <td data-label="Actions">
-          <button class="btn btn-edit" (click)="editUser(user)">Edit</button>
-          <button class="btn btn-delete" (click)="deleteUser(user.id)">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <p *ngIf="!users.length && !errorMessage">No users available.</p>
-</div>
+
+  <!-- Content Section -->
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Main Content -->
+        <div class="col-12">
+          <div class="main-content">
+            <div class="text-center">
+              <h2 class="display-5 fw-bold mb-2" style="color: white;">Users Management</h2>
+            </div>
+            <!-- Toggle Form Button -->
+            <button class="btn btn-primary" (click)="toggleForm()" *ngIf="!showForm">
+              Add New User
+            </button>
+
+            <!-- Form Modal -->
+            <div class="form-modal" *ngIf="showForm">
+              <div class="form-content">
+                <h3>{{ isEditing ? 'Edit User' : 'Add User' }}</h3>
+                <form (ngSubmit)="onSubmit()">
+                  <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      [(ngModel)]="selectedUser.firstName"
+                      name="firstName"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      [(ngModel)]="selectedUser.lastName"
+                      name="lastName"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input
+                      type="email"
+                      id="email"
+                      [(ngModel)]="selectedUser.email"
+                      name="email"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input
+                      type="text"
+                      id="phone"
+                      [(ngModel)]="selectedUser.phone"
+                      name="phone"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="cin">CIN:</label>
+                    <input
+                      type="text"
+                      id="cin"
+                      [(ngModel)]="selectedUser.cin"
+                      name="cin"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="rib">RIB:</label>
+                    <input
+                      type="text"
+                      id="rib"
+                      [(ngModel)]="selectedUser.rib"
+                      name="rib"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input
+                      type="password"
+                      id="password"
+                      [(ngModel)]="selectedUser.password"
+                      name="password"
+                      class="form-control"
+                      [required]="!isEditing"
+                      [placeholder]="isEditing ? 'Leave blank to keep unchanged' : 'Enter password'"
+                    />
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                      {{ isEditing ? 'Update User' : 'Add User' }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" (click)="toggleForm()">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Error/Success Message -->
+            <p *ngIf="errorMessage" [ngClass]="{'success': errorMessage.includes('successfully'), 'error': !errorMessage.includes('successfully')}">
+              {{ errorMessage }}
+            </p>
+
+            <!-- Users Table -->
+            <table class="table table-responsive" *ngIf="users.length">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>CIN</th>
+                  <th>RIB</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let user of users">
+                  <td data-label="ID">{{ user.id }}</td>
+                  <td data-label="First Name">{{ user.firstName }}</td>
+                  <td data-label="Last Name">{{ user.lastName }}</td>
+                  <td data-label="Email">{{ user.email }}</td>
+                  <td data-label="Phone">{{ user.phone }}</td>
+                  <td data-label="CIN">{{ user.cin }}</td>
+                  <td data-label="RIB">{{ user.rib }}</td>
+                  <td data-label="Actions">
+                    <button class="btn btn-edit btn-sm btn-action" (click)="editUser(user)">Edit</button>
+                    <button class="btn btn-delete btn-sm btn-action" (click)="deleteUser(user.id)">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p *ngIf="!users.length && !errorMessage" class="no-data">No users available.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
